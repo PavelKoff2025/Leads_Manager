@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Manager</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <header class="header">
+    <h1>Lead Manager</h1>
+    <p>Сбор и управление заявками в единой базе</p>
+  </header>
+
+  <main class="container">
+    <section class="stats">
+      <div class="stat-card">
+        <div class="label">Всего заявок</div>
+        <div class="value" id="stat-total">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Новые</div>
+        <div class="value" id="stat-new">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Квалифицированы</div>
+        <div class="value" id="stat-qualified">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Источников</div>
+        <div class="value" id="stat-sources">0</div>
+      </div>
+    </section>
+
+    <div id="error" class="error-msg" hidden></div>
+
+    <div class="grid">
+      <aside class="panel">
+        <h2>Новая заявка</h2>
+        <form id="lead-form">
+          <div class="form-group">
+            <label for="name">Имя *</label>
+            <input id="name" name="name" required maxlength="200" placeholder="Иван Петров">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="ivan@example.com">
+          </div>
+          <div class="form-group">
+            <label for="phone">Телефон</label>
+            <input id="phone" name="phone" maxlength="50" placeholder="+7 900 123-45-67">
+          </div>
+          <div class="form-group">
+            <label for="source">Источник</label>
+            <select id="source" name="source">
+              <option value="">— не указан —</option>
+              <option value="landing">Лендинг</option>
+              <option value="website">Сайт</option>
+              <option value="telegram">Telegram</option>
+              <option value="whatsapp">WhatsApp</option>
+              <option value="instagram">Instagram</option>
+              <option value="facebook">Facebook</option>
+              <option value="email">Email</option>
+              <option value="partner">Партнёр</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="notes">Комментарий</label>
+            <textarea id="notes" name="notes" maxlength="2000" placeholder="Опишите запрос клиента"></textarea>
+          </div>
+          <button class="btn btn-primary" type="submit">Создать заявку</button>
+        </form>
+
+        <div class="import-box">
+          <h2>Импорт из Excel</h2>
+          <p class="import-hint">
+            Загрузите .xlsx с колонками: <strong>Имя</strong>, <strong>Email</strong>,
+            <strong>Телефон</strong>, <strong>Источник</strong>, <strong>Комментарий</strong>.
+            Можно использовать колонку <strong>Контакт</strong> вместо email/телефона.
+          </p>
+          <form id="import-form">
+            <div class="form-group">
+              <label for="import-file">Файл .xlsx</label>
+              <input id="import-file" name="file" type="file" accept=".xlsx" required>
+            </div>
+            <button class="btn btn-primary" type="submit">Загрузить лиды</button>
+          </form>
+          <a class="btn btn-secondary" href="/leads/import/template" style="margin-top: 0.75rem; text-decoration: none;">
+            Скачать шаблон
+          </a>
+          <div id="import-result" class="import-result" hidden></div>
+        </div>
+
+        <p class="footer-links">
+          <a href="/docs" target="_blank">API документация</a> ·
+          <a href="/api/info">JSON API</a>
+        </p>
+      </aside>
+
+      <section class="panel">
+        <div class="view-tabs">
+          <button class="view-tab active" type="button" data-view="leads" id="tab-leads">Заявки</button>
+          <button class="view-tab" type="button" data-view="dashboard" id="tab-dashboard">Дашборд</button>
+        </div>
+
+        <div id="leads-view">
+        <div class="toolbar">
+          <h2 style="margin: 0; flex: 1;">Заявки</h2>
+          <select id="status-filter" aria-label="Фильтр по статусу">
+            <option value="">Все статусы</option>
+            <option value="new">Новые</option>
+            <option value="contacted">Связались</option>
+            <option value="qualified">Квалифицированы</option>
+            <option value="lost">Потеряны</option>
+          </select>
+          <button class="btn btn-sm btn-primary" id="refresh-btn" type="button" style="width: auto;">Обновить</button>
+        </div>
+        <form id="search-form" class="search-bar">
+          <input
+            id="search-query"
+            type="search"
+            placeholder="Поиск лида..."
+            aria-label="Поиск лида"
+            maxlength="200"
+          >
+          <select id="search-by" aria-label="Поиск по полю">
+            <option value="name">По имени</option>
+            <option value="phone">По телефону</option>
+            <option value="source">По источнику</option>
+          </select>
+          <button class="btn btn-sm btn-primary" type="submit" style="width: auto;">Найти</button>
+          <button class="btn btn-sm btn-secondary" id="search-reset" type="button" style="width: auto;">Сбросить</button>
+        </form>
+        <div id="leads-list" class="leads-list">
+          <div class="loading">Загрузка заявок...</div>
+        </div>
+        </div>
+
+        <div id="dashboard-view" hidden>
+          <div class="toolbar">
+            <h2 style="margin: 0; flex: 1;">Аналитика лидов</h2>
+            <button class="btn btn-sm btn-primary" id="dashboard-refresh-btn" type="button" style="width: auto;">Обновить</button>
+          </div>
+          <div class="dashboard-summary" id="dashboard-summary">Всего заявок: 0</div>
+          <div class="dashboard-grid">
+            <div class="dashboard-card">
+              <h3>По дате</h3>
+              <div class="bar-chart" id="chart-by-date"></div>
+            </div>
+            <div class="dashboard-card">
+              <h3>По источнику</h3>
+              <div class="bar-chart" id="chart-by-source"></div>
+            </div>
+            <div class="dashboard-card">
+              <h3>По квалификации</h3>
+              <div class="bar-chart" id="chart-by-status"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

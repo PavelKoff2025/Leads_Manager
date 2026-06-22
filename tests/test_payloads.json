@@ -1,0 +1,123 @@
+{
+  "webhook_lead": {
+    "method": "POST",
+    "url": "/lead",
+    "body": {
+      "name": "Ирина",
+      "contact": "+79990000000",
+      "source": "landing",
+      "comment": "Хочу консультацию по тарифам"
+    }
+  },
+  "create_leads": [
+    {
+      "name": "Ирина Петрова",
+      "email": "irina.petrova@example.com",
+      "phone": "+79990000001",
+      "source": "landing",
+      "notes": "Хочу консультацию по тарифам"
+    },
+    {
+      "name": "Алексей Смирнов",
+      "email": "alex@example.com",
+      "source": "telegram",
+      "notes": "Интересует корпоративный тариф"
+    },
+    {
+      "name": "Мария",
+      "email": "maria@example.com",
+      "phone": "79261234567",
+      "source": "instagram",
+      "notes": "Реклама в сторис"
+    },
+    {
+      "name": "Дмитрий",
+      "email": "dmitry@example.com",
+      "phone": "+7 (926) 123-45-67",
+      "source": "facebook",
+      "notes": ""
+    },
+    {
+      "name": "Елена",
+      "email": "elena@mail.ru",
+      "source": "email",
+      "notes": "Ответ на рассылку"
+    },
+    {
+      "name": "Олег",
+      "email": "oleg@example.com",
+      "phone": "+79998887766",
+      "source": "partner",
+      "notes": "Партнёрская программа"
+    },
+    {
+      "name": "Анна",
+      "email": "anna@example.com",
+      "phone": "89161234567",
+      "source": "website",
+      "notes": "Заявка с формы на сайте"
+    },
+    {
+      "name": "Сергей",
+      "email": "sergey@example.com",
+      "phone": "+7 999 888-77-66",
+      "source": "whatsapp",
+      "notes": "Чат с менеджером"
+    }
+  ],
+  "create_lead": {
+    "method": "POST",
+    "url": "/leads",
+    "body": {
+      "name": "Ирина Петрова",
+      "email": "irina.petrova@example.com",
+      "phone": "+79990000001",
+      "source": "landing",
+      "notes": "Хочу консультацию по тарифам"
+    }
+  },
+  "update_lead_status": {
+    "method": "PATCH",
+    "url": "/leads/1",
+    "body": {
+      "status": "contacted",
+      "notes": "Связались по телефону"
+    }
+  },
+  "update_lead_full": {
+    "method": "PATCH",
+    "url": "/leads/1",
+    "body": {
+      "name": "Ирина Петрова",
+      "email": "irina.petrova@company.com",
+      "phone": "+79990000001",
+      "source": "landing",
+      "status": "qualified",
+      "notes": "Готов к встрече"
+    }
+  },
+  "list_leads": {
+    "method": "GET",
+    "url": "/leads"
+  },
+  "list_leads_by_status": {
+    "method": "GET",
+    "url": "/leads?status=new&limit=10&offset=0"
+  },
+  "get_lead": {
+    "method": "GET",
+    "url": "/leads/1"
+  },
+  "delete_lead": {
+    "method": "DELETE",
+    "url": "/leads/1"
+  },
+  "root": {
+    "method": "GET",
+    "url": "/"
+  },
+  "health_check": {
+    "method": "GET",
+    "url": "/health"
+  }
+}
