@@ -88,7 +88,7 @@ async def validation_exception_handler(
 
 
 @app.get("/")
-def dashboard() -> FileResponse:
+def index_page() -> FileResponse:
     return FileResponse(STATIC_DIR / "index.html")
 
 
